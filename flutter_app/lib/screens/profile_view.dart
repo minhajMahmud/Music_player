@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/auth_provider.dart';
 import '../providers/theme_provider.dart';
+import '../services/firestore_service.dart';
+import '../admin/admin_screen.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -25,7 +27,10 @@ class ProfileView extends StatelessWidget {
                   radius: 60,
                   backgroundColor: Colors.orange.shade400,
                   child: Text(
-                    authProvider.userName?.substring(0, 1).toUpperCase() ?? 'G',
+                    (authProvider.userName != null &&
+                            authProvider.userName!.isNotEmpty)
+                        ? authProvider.userName!.substring(0, 1).toUpperCase()
+                        : 'G',
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -177,6 +182,43 @@ class ProfileView extends StatelessWidget {
                   ),
                 ),
               );
+            },
+          ),
+
+          const SizedBox(height: 24),
+          const _SectionTitle(title: 'Developer Options'),
+          const SizedBox(height: 12),
+          _SettingsTile(
+            icon: Icons.dashboard_outlined,
+            title: 'Admin Dashboard',
+            trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+            onTap: () {
+              // In a real app, check for admin role here
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AdminScreen()),
+              );
+            },
+          ),
+          _SettingsTile(
+            icon: Icons.cloud_upload_outlined,
+            title: 'Populate Database',
+            onTap: () async {
+              try {
+                await FirestoreService().seedDatabase();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Database populated successfully!')),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error: $e')),
+                  );
+                }
+              }
             },
           ),
 

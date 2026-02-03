@@ -16,6 +16,29 @@ class Song {
     required this.cover,
     this.audioUrl,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'artist': artist,
+      'album': album,
+      'duration': duration,
+      'cover': cover,
+      'audioUrl': audioUrl,
+    };
+  }
+
+  factory Song.fromMap(Map<String, dynamic> map, String id) {
+    return Song(
+      id: id,
+      title: map['title'] ?? '',
+      artist: map['artist'] ?? '',
+      album: map['album'] ?? '',
+      duration: map['duration']?.toInt() ?? 0,
+      cover: map['cover'] ?? '',
+      audioUrl: map['audioUrl'],
+    );
+  }
 }
 
 class Playlist {
@@ -34,6 +57,30 @@ class Playlist {
     required this.songs,
     required this.gradient,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'description': description,
+      'cover': cover,
+      'gradient': gradient,
+      'songs': songs.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  factory Playlist.fromMap(Map<String, dynamic> map, String id) {
+    return Playlist(
+      id: id,
+      name: map['name'] ?? '',
+      description: map['description'] ?? '',
+      cover: map['cover'] ?? '',
+      gradient: map['gradient'] ?? 'from-purple-600 to-blue-600',
+      songs: map['songs'] != null
+          ? List<Song>.from(
+              (map['songs'] as List).map((x) => Song.fromMap(x, x['id'] ?? '')))
+          : [],
+    );
+  }
 }
 
 final List<Song> sampleSongs = [

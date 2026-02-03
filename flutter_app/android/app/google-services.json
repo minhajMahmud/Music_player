@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "808623945614",
+    "project_id": "music-player-b4ee4",
+    "storage_bucket": "music-player-b4ee4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808623945614:android:45359acdc1353f0378d6df",
+        "android_client_info": {
+          "package_name": "com.example.tuneflow_music"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtur8jGTvXSq6ZIz_pgJVB58i3chJi108"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

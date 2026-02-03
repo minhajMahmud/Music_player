@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../models/music_data.dart';
 import '../widgets/playlist_card.dart';
 import '../widgets/recent_card.dart';
+import '../services/firestore_service.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -37,23 +38,32 @@ class HomeView extends StatelessWidget {
 
           // Quick Access Grid
           // Using GridView inside scroll view requires ShrinkWrap or SizedBox
-          LayoutBuilder(
-            builder: (context, constraints) {
-              // Adaptive columns
-              int crossAxisCount = constraints.maxWidth > 600 ? 3 : 2;
-              return GridView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  childAspectRatio: 3, // Wide cards
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemCount: recentlyPlayed.take(6).length,
-                itemBuilder: (context, index) {
-                  return RecentCard(song: recentlyPlayed[index]);
+          StreamBuilder<List<Song>>(
+            stream: FirestoreService().getSongs(),
+            builder: (context, snapshot) {
+              final songs = (snapshot.hasData && snapshot.data!.isNotEmpty)
+                  ? snapshot.data!.take(6).toList()
+                  : recentlyPlayed.take(6).toList();
+
+              return LayoutBuilder(
+                builder: (context, constraints) {
+                  // Adaptive columns
+                  int crossAxisCount = constraints.maxWidth > 600 ? 3 : 2;
+                  return GridView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      childAspectRatio: 3, // Wide cards
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemCount: songs.length,
+                    itemBuilder: (context, index) {
+                      return RecentCard(song: songs[index]);
+                    },
+                  );
                 },
               );
             },
@@ -66,12 +76,23 @@ class HomeView extends StatelessWidget {
           const SizedBox(height: 16),
           SizedBox(
             height: 340, // Expanded height for large cards
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: madeForYou.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 24),
-              itemBuilder: (context, index) {
-                return PlaylistCard(playlist: madeForYou[index], sizeLg: true);
+            child: StreamBuilder<List<Playlist>>(
+              stream: FirestoreService().getPlaylists(),
+              builder: (context, snapshot) {
+                final playlists =
+                    (snapshot.hasData && snapshot.data!.isNotEmpty)
+                        ? snapshot.data!
+                        : madeForYou;
+
+                return ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: playlists.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 24),
+                  itemBuilder: (context, index) {
+                    return PlaylistCard(
+                        playlist: playlists[index], sizeLg: true);
+                  },
+                );
               },
             ),
           ),

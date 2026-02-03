@@ -7,6 +7,12 @@
 			"command": "flutter run -d chrome",
 			"isBackground": true,
 			"group": "build"
+		},
+		{
+			"label": "Pub Get",
+			"type": "shell",
+			"command": "flutter pub get",
+			"group": "build"
 		}
 	]
 }
