@@ -1,0 +1,14 @@
+class: Playlist
+table: playlists
+fields:
+  id:
+    type: UuidValue
+    defaultModel: "random"
+    defaultPersist: "random"
+  name: String
+  description: String?
+  coverUrl: String?
+  gradient: String?
+  ownerUserId: UuidValue?
+  isPublic: bool
+  createdAt: DateTime

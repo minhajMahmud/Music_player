@@ -1,13 +1,19 @@
+
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../admin_store.dart';
 import '../components/stats_card.dart';
+import '../ui_helpers.dart';
 
 class DashboardView extends StatelessWidget {
-  const DashboardView({super.key});
+  final AdminStore store;
+
+  const DashboardView({super.key, required this.store});
 
   @override
   Widget build(BuildContext context) {
+    final revenue = store.monthlyRevenueUsd;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -15,42 +21,41 @@ class DashboardView extends StatelessWidget {
         children: [
           LayoutBuilder(
             builder: (context, constraints) {
-              int crossAxisCount = constraints.maxWidth > 1200
-                  ? 4
-                  : (constraints.maxWidth > 800 ? 2 : 1);
+              final w = constraints.maxWidth;
+              final crossAxisCount = w > 1200 ? 4 : (w > 800 ? 2 : 1);
+
               return GridView.count(
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
                 shrinkWrap: true,
-                childAspectRatio: 1.5,
                 physics: const NeverScrollableScrollPhysics(),
-                children: const [
+                children: [
                   StatsCard(
                     title: "Total Songs",
-                    value: "12,458",
-                    change: "+124 this week",
+                    value: store.totalSongs.toString(),
+                    change: "+${(store.totalSongs / 10).toStringAsFixed(1)}%",
                     isPositive: true,
                     icon: LucideIcons.music,
                   ),
                   StatsCard(
-                    title: "Total Users",
-                    value: "8,942",
-                    change: "+532 this week",
-                    isPositive: true,
-                    icon: LucideIcons.users,
-                  ),
-                  StatsCard(
-                    title: "Active Artists",
-                    value: "1,245",
-                    change: "+12 this week",
+                    title: "Artists",
+                    value: store.totalArtists.toString(),
+                    change: "+${(store.totalArtists / 5).toStringAsFixed(1)}%",
                     isPositive: true,
                     icon: LucideIcons.mic2,
                   ),
                   StatsCard(
-                    title: "Revenue",
-                    value: "\$45,231",
-                    change: "+12.5% vs last month",
+                    title: "Users",
+                    value: store.totalUsers.toString(),
+                    change: "${store.totalUsers.isEven ? '+' : '-'}1.2%",
+                    isPositive: store.totalUsers.isEven,
+                    icon: LucideIcons.users,
+                  ),
+                  StatsCard(
+                    title: "Monthly Revenue",
+                    value: "\$${revenue.toStringAsFixed(2)}",
+                    change: "+3.4%",
                     isPositive: true,
                     icon: LucideIcons.dollarSign,
                   ),
@@ -58,78 +63,164 @@ class DashboardView extends StatelessWidget {
               );
             },
           ),
-
           const SizedBox(height: 24),
 
-          // Charts Placeholder
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 2,
-                child: Container(
-                  height: 400,
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF18181b),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade800),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Streaming Analytics",
-                        style: GoogleFonts.inter(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+          LayoutBuilder(builder: (context, c) {
+            final twoCol = c.maxWidth > 1000;
+            return Flex(
+              direction: twoCol ? Axis.horizontal : Axis.vertical,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: sectionCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Quick Overview", style: headingStyle()),
+                        const SizedBox(height: 12),
+                        _MiniKpiRow(
+                          label: 'Active Subscriptions',
+                          value: store.activeSubscriptions.toString(),
+                          icon: LucideIcons.creditCard,
                         ),
-                      ),
-                      const Expanded(
-                        child: Center(
-                          child: Text("Chart Placeholder: Area Chart",
-                              style: TextStyle(color: Colors.grey)),
+                        const SizedBox(height: 10),
+                        _MiniKpiRow(
+                          label: 'Albums',
+                          value: store.totalAlbums.toString(),
+                          icon: LucideIcons.disc,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: 24),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  height: 400,
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF18181b),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade800),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Top Genres",
-                        style: GoogleFonts.inter(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                        const SizedBox(height: 10),
+                        _MiniKpiRow(
+                          label: 'Top Genre',
+                          value: _topKey(store.songsByGenre),
+                          icon: LucideIcons.sparkles,
                         ),
-                      ),
-                      const Expanded(
-                        child: Center(
-                          child: Text("Chart Placeholder: Bar Chart",
-                              style: TextStyle(color: Colors.grey)),
+                        const SizedBox(height: 16),
+                        Text(
+                          "Tip: Use the search bar to filter tables in Songs/Users/Subscriptions.",
+                          style: bodyStyle().copyWith(color: Colors.grey.shade300),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+                if (twoCol) const SizedBox(width: 16) else const SizedBox(height: 16),
+                Expanded(
+                  flex: 3,
+                  child: sectionCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Recent Items (Mock)", style: headingStyle()),
+                        const SizedBox(height: 12),
+                        ...store.songs.take(4).map((s) => _RecentTile(
+                              icon: LucideIcons.music,
+                              title: s.title,
+                              subtitle: '${s.artistName} • ${s.albumTitle}',
+                              trailing: formatDuration(s.durationSec),
+                            )),
+                        const SizedBox(height: 12),
+                        ...store.users.take(3).map((u) => _RecentTile(
+                              icon: LucideIcons.user,
+                              title: u.name,
+                              subtitle: u.email,
+                              trailing: u.active ? 'Active' : 'Disabled',
+                              trailingColor:
+                                  u.active ? Colors.green.shade300 : Colors.red.shade300,
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  String _topKey(Map<String, int> m) {
+    if (m.isEmpty) return '—';
+    final sorted = m.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+    return sorted.first.key;
+  }
+}
+
+class _MiniKpiRow extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+
+  const _MiniKpiRow({required this.label, required this.value, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: Colors.orange.shade400.withOpacity(0.12),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade800),
           ),
+          child: Icon(icon, size: 18, color: Colors.orange.shade300),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(label, style: bodyStyle().copyWith(color: Colors.grey.shade300)),
+        ),
+        Text(value, style: bodyStyle().copyWith(fontWeight: FontWeight.w800)),
+      ],
+    );
+  }
+}
+
+class _RecentTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final String trailing;
+  final Color? trailingColor;
+
+  const _RecentTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.trailing,
+    this.trailingColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade900,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade800),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.orange.shade300, size: 18),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,
+                    style: bodyStyle().copyWith(fontWeight: FontWeight.w700)),
+                const SizedBox(height: 2),
+                Text(subtitle, style: bodyStyle().copyWith(color: Colors.grey.shade400)),
+              ],
+            ),
+          ),
+          Text(trailing,
+              style: bodyStyle().copyWith(color: trailingColor ?? Colors.grey.shade300)),
         ],
       ),
     );

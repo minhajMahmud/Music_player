@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'providers/player_provider.dart';
@@ -8,6 +7,7 @@ import 'providers/theme_provider.dart';
 import 'providers/auth_provider.dart';
 import 'screens/main_screen.dart';
 import 'screens/welcome_screen.dart';
+import 'theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,31 +39,8 @@ class MyApp extends StatelessWidget {
             title: 'Melodify',
             debugShowCheckedModeBanner: false,
             themeMode: themeProvider.themeMode,
-            theme: ThemeData(
-              brightness: Brightness.light,
-              primaryColor: Colors.black,
-              scaffoldBackgroundColor: Colors.white,
-              useMaterial3: true,
-              textTheme:
-                  GoogleFonts.interTextTheme(ThemeData.light().textTheme),
-            ),
-            darkTheme: ThemeData(
-              brightness: Brightness.dark,
-              primaryColor: Colors.white,
-              scaffoldBackgroundColor: Colors.black,
-              cardColor: const Color(0xFF18181b),
-              dividerColor: const Color(0xFF27272a),
-              useMaterial3: true,
-              textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
-              sliderTheme: const SliderThemeData(
-                trackHeight: 4,
-                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6),
-                overlayShape: RoundSliderOverlayShape(overlayRadius: 12),
-                activeTrackColor: Colors.white,
-                inactiveTrackColor: Colors.white24,
-                thumbColor: Colors.white,
-              ),
-            ),
+            theme: AppTheme.lightTheme(context),
+            darkTheme: AppTheme.darkTheme(context),
             home: authProvider.isAuthenticated
                 ? const MainScreen()
                 : const WelcomeScreen(),

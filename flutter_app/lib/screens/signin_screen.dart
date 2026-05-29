@@ -51,6 +51,26 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => _isLoading = true);
+    try {
+      await context.read<AuthProvider>().signInWithGoogle();
+      if (mounted) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Google sign in failed: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -325,7 +345,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _socialButton(Icons.g_mobiledata, 'Google'),
+                            _socialButton(Icons.g_mobiledata, 'Google',
+                                onTap: _handleGoogleSignIn),
                             const SizedBox(width: 16),
                             _socialButton(Icons.apple, 'Apple'),
                             const SizedBox(width: 16),
@@ -377,7 +398,7 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget _socialButton(IconData icon, String label) {
+  Widget _socialButton(IconData icon, String label, {VoidCallback? onTap}) {
     return Container(
       width: 64,
       height: 64,
@@ -387,12 +408,13 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
       child: IconButton(
         icon: Icon(icon, color: Colors.white, size: 32),
-        onPressed: () {
-          // Handle social sign in
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('$label sign in not implemented yet')),
-          );
-        },
+        onPressed: onTap ??
+            () {
+              // Handle social sign in
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('$label sign in not implemented yet')),
+              );
+            },
       ),
     );
   }

@@ -1,0 +1,7 @@
+class: PlaylistSong
+table: playlist_items
+fields:
+  playlistId: UuidValue
+  songId: UuidValue
+  position: int
+  addedAt: DateTime

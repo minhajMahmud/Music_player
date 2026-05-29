@@ -1,0 +1,25 @@
+emailIdp:
+  - login:
+  - startRegistration:
+  - verifyRegistrationCode:
+  - finishRegistration:
+  - startPasswordReset:
+  - verifyPasswordResetCode:
+  - finishPasswordReset:
+jwtRefresh:
+  - refreshAccessToken:
+music:
+  - getAllArtists:
+  - getArtist:
+  - addArtist:
+  - getAlbums:
+  - addAlbum:
+  - getSongs:
+  - addSong:
+  - getPlaylists:
+  - createPlaylist:
+sign:
+  - firebaseLogin:
+  - guestLogin:
+greeting:
+  - hello:

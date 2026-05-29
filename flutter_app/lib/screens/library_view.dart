@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:provider/provider.dart'; // Add this for context usage if needed later
 import '../models/music_data.dart';
 import '../widgets/song_row.dart';
 import '../widgets/playlist_card.dart';

@@ -1,16 +1,39 @@
-# tuneflow_music
+# TuneFlow Music (Flutter App)
 
-A new Flutter project.
+This repository contains the Flutter client for TuneFlow Music and a **Serverpod** backend located at:
 
-## Getting Started
+`flutter_app/backend/backend_server`
 
-This project is a starting point for a Flutter application.
+## Backend (Serverpod)
 
-A few resources to get you started if this is your first Flutter project:
+To run the backend locally:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. Start Postgres + Redis using Docker:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+cd flutter_app/backend/backend_server
+docker compose up --build --detach
+```
+
+2. Start the Serverpod server:
+
+```
+dart bin/main.dart
+```
+
+To stop services:
+
+```
+docker compose stop
+```
+
+## Flutter App
+
+Run the Flutter app as usual (e.g. `flutter run`).
+
+## Where to edit backend code
+
+- Endpoints: `flutter_app/backend/backend_server/lib/src/endpoints/`
+- Models: `flutter_app/backend/backend_server/lib/src/models/`
+- Config: `flutter_app/backend/backend_server/config/`
+- Migrations: `flutter_app/backend/backend_server/migrations/`

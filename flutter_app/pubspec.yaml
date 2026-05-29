@@ -13,9 +13,14 @@ dependencies:
   google_fonts: ^6.1.0
   lucide_icons: ^0.257.0
   cached_network_image: ^3.3.0
+  http: ^1.1.0
   firebase_core: ^4.4.0
   firebase_auth: ^6.1.4
+  google_sign_in: ^6.1.5
   cloud_firestore: ^6.1.2
+  serverpod_flutter: ^3.0.1
+  backend_client:
+    path: backend/backend_client
   # just_audio: ^0.9.36 # Uncomment for real audio
 
 dev_dependencies:

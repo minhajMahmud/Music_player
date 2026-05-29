@@ -1,0 +1,13 @@
+class: Album
+table: albums
+fields:
+  id:
+    type: UuidValue
+    defaultModel: "random"
+    defaultPersist: "random"
+  title: String
+  artistId: UuidValue
+  releaseYear: int?
+  coverUrl: String?
+  trackCount: int
+  createdAt: DateTime

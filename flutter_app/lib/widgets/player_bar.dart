@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import '../providers/player_provider.dart';
+import '../providers/player_provider.dart' as player_provider;
 import '../models/music_data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -18,7 +18,7 @@ class PlayerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.watch<PlayerProvider>().currentSong == null) {
+    if (context.watch<player_provider.PlayerProvider>().currentSong == null) {
       return const SizedBox.shrink();
     }
 
@@ -52,7 +52,7 @@ class PlayerBar extends StatelessWidget {
   }
 
   Widget _buildMobileContent(BuildContext context) {
-    final provider = context.watch<PlayerProvider>();
+    final provider = context.watch<player_provider.PlayerProvider>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
@@ -88,7 +88,8 @@ class PlayerBar extends StatelessWidget {
   }
 
   Widget _buildSongInfo(BuildContext context) {
-    final song = context.select<PlayerProvider, Song?>((p) => p.currentSong);
+    final song = context
+        .select<player_provider.PlayerProvider, Song?>((p) => p.currentSong);
     if (song == null) return const SizedBox.shrink();
 
     return GestureDetector(
@@ -147,7 +148,7 @@ class PlayerBar extends StatelessWidget {
   }
 
   Widget _buildPlayerControls(BuildContext context) {
-    final provider = context.watch<PlayerProvider>();
+    final provider = context.watch<player_provider.PlayerProvider>();
     final song = provider.currentSong;
 
     return Column(
@@ -187,10 +188,10 @@ class PlayerBar extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(
-                provider.repeat == RepeatMode.one
+                provider.repeat == player_provider.RepeatMode.one
                     ? LucideIcons.repeat1
                     : LucideIcons.repeat,
-                color: provider.repeat != RepeatMode.off
+                color: provider.repeat != player_provider.RepeatMode.off
                     ? Theme.of(context).primaryColor
                     : null,
                 size: 20,
@@ -227,7 +228,7 @@ class PlayerBar extends StatelessWidget {
   }
 
   Widget _buildVolumeControls(BuildContext context) {
-    final provider = context.watch<PlayerProvider>();
+    final provider = context.watch<player_provider.PlayerProvider>();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,

@@ -1,0 +1,6 @@
+class: UserFavorite
+table: user_favorites
+fields:
+  userId: UuidValue
+  songId: UuidValue
+  createdAt: DateTime

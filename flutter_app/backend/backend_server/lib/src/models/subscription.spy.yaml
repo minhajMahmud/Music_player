@@ -1,0 +1,13 @@
+class: Subscription
+table: subscriptions
+fields:
+  id:
+    type: UuidValue
+    defaultModel: "random"
+    defaultPersist: "random"
+  userId: UuidValue
+  plan: String
+  status: String
+  renewsOn: DateTime
+  startedAt: DateTime
+  canceledAt: DateTime?

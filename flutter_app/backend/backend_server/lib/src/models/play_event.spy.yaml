@@ -1,0 +1,8 @@
+class: PlayEvent
+table: play_events
+fields:
+  userId: UuidValue?
+  songId: UuidValue
+  playedAt: DateTime
+  secondsListened: int
+  device: String?

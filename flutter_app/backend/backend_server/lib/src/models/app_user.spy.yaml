@@ -1,0 +1,13 @@
+class: AppUser
+table: users
+fields:
+  id:
+    type: UuidValue
+    defaultModel: "random"
+    defaultPersist: "random"
+  firebaseId: String?
+  name: String
+  email: String
+  role: String
+  active: bool
+  joinedAt: DateTime

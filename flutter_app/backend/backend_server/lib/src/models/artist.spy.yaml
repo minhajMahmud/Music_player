@@ -1,0 +1,11 @@
+class: Artist
+table: artists
+fields:
+  id:
+    type: UuidValue
+    defaultModel: "random"
+    defaultPersist: "random"
+  name: String
+  genre: String?
+  monthlyListeners: int
+  createdAt: DateTime

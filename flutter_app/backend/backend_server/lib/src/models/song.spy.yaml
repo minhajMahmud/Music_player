@@ -1,0 +1,16 @@
+class: Song
+table: songs
+fields:
+  id:
+    type: UuidValue
+    defaultModel: "random"
+    defaultPersist: "random"
+  title: String
+  artistId: UuidValue
+  albumId: UuidValue?
+  durationSec: int
+  genre: String?
+  audioUrl: String?
+  coverUrl: String?
+  streams: int
+  createdAt: DateTime
