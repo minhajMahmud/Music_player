@@ -12,7 +12,12 @@
           "package_name": "com.example.tuneflow_music"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "808623945614-ts26n9ehasi9br0uq40r4v0aa5vamcq6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAtur8jGTvXSq6ZIz_pgJVB58i3chJi108"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "808623945614-ts26n9ehasi9br0uq40r4v0aa5vamcq6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "808623945614-qipfdqr6q5hdc3uo0g8pjggm7vnvq6d8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tuneflowMusic"
+              }
+            }
+          ]
         }
       }
     }
